@@ -13,13 +13,11 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from google.colab import drive
-drive.mount('/content/drive')
+#from google.colab import drive
+#drive.mount('/content/drive')
+#path_to_matches="/content/drive/MyDrive/Colab Notebooks/Cricket Prediction/matches.csv"
 
-
-path_to_matches="/content/drive/MyDrive/Colab Notebooks/Cricket Prediction/matches.csv"
-
-matches=pd.read_csv(path_to_matches)
+matches=pd.read_csv('data/matches.csv')
 matches.head(5)
 
 matches.tail(5)
@@ -86,6 +84,20 @@ sns.lmplot(x='team2',y='winner',data=matches,fit_reg=True, ci=None)
 sns.lmplot(x='toss_winner', y='winner', data=matches, fit_reg=True, ci=None)
 
 matches.plot.hist(y="winner")
+
+winner_counts = matches['winner'].value_counts()
+
+reverse_teamMapper = {v: k for k, v in teamMapper.items()}
+winner_counts.index = winner_counts.index.map(reverse_teamMapper)
+
+plt.figure(figsize=(12, 5)) 
+sns.barplot(x=winner_counts.index, y=winner_counts.values)
+plt.xticks(rotation=45, ha='right') 
+plt.xlabel("Winner Team")
+plt.ylabel("Number of Wins")
+plt.title("Distribution of Wins per Team")
+plt.tight_layout() 
+plt.show()
 
 matches[matches.isnull().any(axis=1)].head(20)
 
